@@ -63,16 +63,28 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Customer> viewAllCustomer(Customer customer) throws CustomerException {
+	public Customer viewCustomerById(Integer customerId) throws CustomerException {
 		// TODO Auto-generated method stub
-		return null;
+
+		Optional<Customer> opt = custRepo.findById(customerId);
+		if (opt.isPresent()) {
+			Customer customer = opt.get();
+			return customer;
+		} else {
+			throw new CustomerException("Customer id not found!");
+		}
 	}
 
 	@Override
-	public List<Customer> viewAllCustomerOfRestaurant(Restaurant restaurant)
-			throws CustomerException, ResolutionException {
+	public List<Customer> viewAllCustomer() throws CustomerException {
 		// TODO Auto-generated method stub
-		return null;
+
+		List<Customer> customerList = custRepo.findAll();
+		if (!customerList.isEmpty()) {
+			return customerList;
+		} else {
+			throw new CustomerException("Empty!");
+		}
 	}
 
 }
