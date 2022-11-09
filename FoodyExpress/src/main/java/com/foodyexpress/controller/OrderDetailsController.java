@@ -1,4 +1,4 @@
-package com.foodyexpress.controllerr;
+package com.foodyexpress.controller;
 
 public class OrderDetailsController {
 
