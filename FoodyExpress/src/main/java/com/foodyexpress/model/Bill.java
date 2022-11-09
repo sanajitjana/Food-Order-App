@@ -1,80 +1,112 @@
 package com.foodyexpress.model;
 
+
+
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
 public class Bill {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String billId;
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer billId;
 	private LocalDateTime billDate;
-	private OrderDetails order;
+	private Double totalCost;
 	private Integer totalItem;
-	private double totalCost;
+	
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private OrderDetails order;
+	
+	
+	public Bill() {
+		// TODO Auto-generated constructor stub
+	}
 
-	public String getBillId() {
+
+	public Bill(Integer billId, LocalDateTime billDate, Double totalCost, Integer totalItem, OrderDetails order) {
+		super();
+		this.billId = billId;
+		this.billDate = billDate;
+		this.totalCost = totalCost;
+		this.totalItem = totalItem;
+		this.order = order;
+	}
+
+
+	public Integer getBillId() {
 		return billId;
 	}
 
-	public void setBillId(String billId) {
+
+	public void setBillId(Integer billId) {
 		this.billId = billId;
 	}
+
 
 	public LocalDateTime getBillDate() {
 		return billDate;
 	}
 
+
 	public void setBillDate(LocalDateTime billDate) {
 		this.billDate = billDate;
 	}
 
-	public OrderDetails getOrder() {
-		return order;
+
+	public Double getTotalCost() {
+		return totalCost;
 	}
 
-	public void setOrder(OrderDetails order) {
-		this.order = order;
+
+	public void setTotalCost(Double totalCost) {
+		this.totalCost = totalCost;
 	}
+
 
 	public Integer getTotalItem() {
 		return totalItem;
 	}
 
+
 	public void setTotalItem(Integer totalItem) {
 		this.totalItem = totalItem;
 	}
 
-	public double getTotalCost() {
-		return totalCost;
+
+	public OrderDetails getOrder() {
+		return order;
 	}
 
-	public void setTotalCost(double totalCost) {
-		this.totalCost = totalCost;
+
+	public void setOrder(OrderDetails order) {
+		this.order = order;
 	}
+
 
 	@Override
 	public String toString() {
-		return "Bill [billId=" + billId + ", billDate=" + billDate + ", order=" + order + ", totalItem=" + totalItem
-				+ ", totalCost=" + totalCost + "]";
+		return "Bill [billId=" + billId + ", billDate=" + billDate + ", totalCost=" + totalCost + ", totalItem="
+				+ totalItem + ", order=" + order + "]";
 	}
-
-	public Bill(String billId, LocalDateTime billDate, OrderDetails order, Integer totalItem, double totalCost) {
-		super();
-		this.billId = billId;
-		this.billDate = billDate;
-		this.order = order;
-		this.totalItem = totalItem;
-		this.totalCost = totalCost;
-	}
-
-	public Bill() {
-		// TODO Auto-generated constructor stub
-	}
-
+	
+	
+	
 }
