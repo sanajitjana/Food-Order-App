@@ -80,7 +80,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public List<Restaurant> viewRestaurantByLocation(String location) throws RestaurantException {
+	public List<Restaurant> viewRestaurantByCity(String city) throws RestaurantException {
 		// TODO Auto-generated method stub
 		return null;
 	}
