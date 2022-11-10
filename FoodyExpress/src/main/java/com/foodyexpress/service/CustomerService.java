@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.model.Customer;
-import com.foodyexpress.model.Restaurant;
 
 public interface CustomerService {
 
@@ -14,8 +13,8 @@ public interface CustomerService {
 
 	Customer removeCustomer(Customer c) throws CustomerException;
 
-	Customer viewCustomer(Customer c) throws CustomerException;
+	Customer viewCustomer(Integer cid) throws CustomerException;
 
-	List<Customer> viewAllCustomers(Restaurant res) throws CustomerException;
+	List<Customer> viewAllCustomers() throws CustomerException;
 
 }

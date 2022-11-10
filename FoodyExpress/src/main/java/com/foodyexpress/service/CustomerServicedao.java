@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.model.Customer;
-import com.foodyexpress.model.Restaurant;
 import com.foodyexpress.repository.CustomerRepo;
 
 @Service
@@ -61,25 +60,27 @@ public class CustomerServicedao implements CustomerService {
 	}
 
 	@Override
-	public Customer viewCustomer(Customer c) throws CustomerException {
-		if (c == null) {
-			throw new CustomerException("Null value is not allowed");
-		}
+	public Customer viewCustomer(Integer cid) throws CustomerException {
 
-		Optional<Customer> optional = customerRepo.findById(c.getCustomerId());
+		Optional<Customer> optional = customerRepo.findById(cid);
 
 		if (optional.isEmpty()) {
-			throw new CustomerException("No customer exist with given customer id :" + c.getCustomerId());
+			throw new CustomerException("No customer exist with given customer id :" + cid);
 		}
-		
-		
+
 		return optional.get();
 	}
 
 	@Override
-	public List<Customer> viewAllCustomers(Restaurant res) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Customer> viewAllCustomers() throws CustomerException {
+
+		List<Customer> customers = customerRepo.findAll();
+
+		if (customers.size() == 0) {
+			throw new CustomerException("No customers available in list");
+		}
+
+		return customers;
 	}
 
 }
