@@ -1,92 +1,41 @@
 package com.foodyexpress.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 public class Restaurant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String restaurantId;
+	private Integer restaurantId;
 	private String restaurantName;
+
+	@JsonIgnore
+	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
-	private List<Item> itemList;
+
+	@OneToOne(targetEntity = Item.class, cascade = CascadeType.ALL)
+	private List<Item> itemList = new ArrayList<>();
 	private String managerName;
 	private String contactNunber;
-
-	public String getRestaurantId() {
-		return restaurantId;
-	}
-
-	public void setRestaurantId(String restaurantId) {
-		this.restaurantId = restaurantId;
-	}
-
-	public String getRestaurantName() {
-		return restaurantName;
-	}
-
-	public void setRestaurantName(String restaurantName) {
-		this.restaurantName = restaurantName;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public List<Item> getItemList() {
-		return itemList;
-	}
-
-	public void setItemList(List<Item> itemList) {
-		this.itemList = itemList;
-	}
-
-	public String getManagerName() {
-		return managerName;
-	}
-
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
-	}
-
-	public String getContactNunber() {
-		return contactNunber;
-	}
-
-	public void setContactNunber(String contactNunber) {
-		this.contactNunber = contactNunber;
-	}
-
-	@Override
-	public String toString() {
-		return "Restaurant [restaurantId=" + restaurantId + ", restaurantName=" + restaurantName + ", address="
-				+ address + ", itemList=" + itemList + ", managerName=" + managerName + ", contactNunber="
-				+ contactNunber + "]";
-	}
-
-	public Restaurant(String restaurantId, String restaurantName, Address address, List<Item> itemList,
-			String managerName, String contactNunber) {
-		super();
-		this.restaurantId = restaurantId;
-		this.restaurantName = restaurantName;
-		this.address = address;
-		this.itemList = itemList;
-		this.managerName = managerName;
-		this.contactNunber = contactNunber;
-	}
-
-	public Restaurant() {
-		// TODO Auto-generated constructor stub
-	}
 
 }
