@@ -10,15 +10,15 @@ public class Login {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer userId;
+	private String userId;
 	private String userName;
 	private String password;
 
-	public Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -43,7 +43,7 @@ public class Login {
 		return "Login [userId=" + userId + ", userName=" + userName + ", password=" + password + "]";
 	}
 
-	public Login(Integer userId, String userName, String password) {
+	public Login(String userId, String userName, String password) {
 		super();
 		this.userId = userId;
 		this.userName = userName;

@@ -97,4 +97,14 @@ public class Customer {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Customer findByUserId(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

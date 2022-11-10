@@ -1,0 +1,11 @@
+
+import com.foodyexpress.exceptions.LoginException;
+import com.foodyexpress.model.Login;
+
+public interface LoginService {
+	
+	public String logIntoAccount(Login logindto)throws LoginException;
+
+	public String logOutFromAccount(String key)throws LoginException;
+
+}
