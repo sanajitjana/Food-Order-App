@@ -13,9 +13,9 @@ public interface OrderService {
 	
 	public OrderDetails updateOrder(OrderDetails order)throws OrderDetailsException;
 	
-	public OrderDetails removeOrder(OrderDetails order)throws OrderDetailsException;
+	public OrderDetails removeOrder(int orderId)throws OrderDetailsException;
 
-	public OrderDetails viewOrder(OrderDetails order)throws OrderDetailsException;
+	public OrderDetails viewOrder(int orderId)throws OrderDetailsException;
 	
 	public List<OrderDetails> viewAllOrders(Restaurant res)throws OrderDetailsException;
 	

@@ -2,10 +2,12 @@ package com.foodyexpress.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class OrderDetails {
@@ -14,6 +16,7 @@ public class OrderDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer orderId;
 	private LocalDateTime orderDate;
+	@OneToOne(cascade=CascadeType.ALL)
 	private FoodCart cart;
 	private String orderStatus;
 

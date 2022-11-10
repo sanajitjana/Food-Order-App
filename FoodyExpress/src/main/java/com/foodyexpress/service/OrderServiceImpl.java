@@ -18,6 +18,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private OrderDetailsRepo orderRepo;
 	
+	
 	@Override
 	public OrderDetails addOrder(OrderDetails order){
 		
@@ -40,11 +41,26 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDetails removeOrder(OrderDetails order) throws OrderDetailsException {
-		Optional<OrderDetails> opt=orderRepo.findById(order.getOrderId());
+	public OrderDetails removeOrder(int orderId) throws OrderDetailsException {
+		Optional<OrderDetails> opt=orderRepo.findById(orderId);
 		if(opt.isPresent())
 		{
-			orderRepo.delete(order);
+			OrderDetails deletedOrder=opt.get();
+			orderRepo.delete(deletedOrder);
+			return deletedOrder;
+		}
+		else
+		{
+			throw new OrderDetailsException("order does not exist...!");
+		}
+	}
+	
+	@Override
+	public OrderDetails viewOrder(int orderId) throws OrderDetailsException {
+		Optional<OrderDetails> opt=orderRepo.findById(orderId);
+		if(opt.isPresent())
+		{
+			OrderDetails order=opt.get();
 			return order;
 		}
 		else
@@ -53,23 +69,22 @@ public class OrderServiceImpl implements OrderService {
 		}
 	}
 
+	
+
 	@Override
-	public OrderDetails viewOrder(OrderDetails order) throws OrderDetailsException {
-		Optional<OrderDetails> opt=orderRepo.findById(order.getOrderId());
+	public List<OrderDetails> viewAllOrders(Restaurant res) throws OrderDetailsException {
 		
 		return null;
 	}
 
 	@Override
-	public List<OrderDetails> viewAllOrders(Restaurant res) throws OrderDetailsException {
-		// TODO Auto-generated method stub
+	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException {
+		
 		return null;
 	}
 
-	@Override
-	public List<OrderDetails> viewAllOrders(Customer customer) throws OrderDetailsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+
+	
 
 }
