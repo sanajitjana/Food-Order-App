@@ -10,6 +10,7 @@ import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.model.Bill;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.Item;
+import com.foodyexpress.repository.BillDao;
 
 import antlr.collections.List;
 
@@ -17,10 +18,10 @@ public class BillServiceImpl implements BillService {
 	
 	
 	@Autowired
-	BillDAO billDAO;
+	private BillDao billDAO;
 	
-	@Autowired
-	CustomerDAO cusDAO;
+//	@Autowired
+//	CustomerDAO cusDAO;
 
 	
 	
@@ -73,27 +74,34 @@ public class BillServiceImpl implements BillService {
 
 	@Override
 	public String generateTotalBillById(Integer customerId) throws ItemException, CustomerException {
-		Optional<Customer> cOpt = cusDAO.findById(customerId);
-		if(cOpt.isPresent()) {
-			Customer customer = cOpt.get();
-			List<Item> items = customer.getFoodCart().getItemList();
-			
-			if(items.size() > 0) {
-				
-				Double total = 0.0;
-				for(Item item : items) {
-					total += (item.getCost()*item.getQuantity()); 
-				}
-				
-				return "The total bill for "+customer.getFullName()+" is "+total;
-				
-			}else {
-				throw new ItemException("No order items found for "+customer.getFullName());
-			}
-			
-		}else {
-			throw new CustomerException("No Customer found with ID: "+customerId);
-		}
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+
+//	@Override
+//	public String generateTotalBillById(Integer customerId) throws ItemException, CustomerException {
+//		Optional<Customer> cOpt = cusDAO.findById(customerId);
+//		if(cOpt.isPresent()) {
+//			Customer customer = cOpt.get();
+//			List<Item> items = customer.getFoodCart().getItemList();
+//			
+//			if(items.size() > 0) {
+//				
+//				Double total = 0.0;
+//				for(Item item : items) {
+//					total += (item.getCost()*item.getQuantity()); 
+//				}
+//				
+//				return "The total bill for "+customer.getFullName()+" is "+total;
+//				
+//			}else {
+//				throw new ItemException("No order items found for "+customer.getFullName());
+//			}
+//			
+//		}else {
+//			throw new CustomerException("No Customer found with ID: "+customerId);
+//		}
+//	}
 
 }
