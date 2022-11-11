@@ -17,6 +17,8 @@ import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.service.CustomerService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -25,13 +27,13 @@ public class CustomerController {
 	private CustomerService customerService;
 
 	@PostMapping("/add")
-	public ResponseEntity<Customer> addCustomer(Customer c) throws CustomerException {
+	public ResponseEntity<Customer> addCustomer(@RequestBody Customer c) throws CustomerException {
 		Customer customer = customerService.addCustomer(c);
 		return new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Customer> updateCustomer(Customer c) throws CustomerException {
+	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer c) throws CustomerException {
 		Customer customer = customerService.updateCustomer(c);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}

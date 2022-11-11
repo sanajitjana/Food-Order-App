@@ -11,7 +11,7 @@ import com.foodyexpress.model.CurrentUserSession;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.Login;
 import com.foodyexpress.repository.CustomerRepo;
-import com.foodyexpress.repository.SessionRepo;
+import com.foodyexpress.repository.CurrentUserSessionRepo;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -22,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
 	private CustomerRepo cRepo;
 
 	@Autowired
-	private SessionRepo sRepo;
+	private CurrentUserSessionRepo sRepo;
 
 	@Override
 	public String loginAccount(Login login) throws LoginException {

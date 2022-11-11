@@ -3,6 +3,7 @@ package com.foodyexpress.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.foodyexpress.exception.BillException;
 import com.foodyexpress.exception.CustomerException;
@@ -10,15 +11,16 @@ import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.model.Bill;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.Item;
-import com.foodyexpress.repository.BillDao;
+import com.foodyexpress.repository.BillRepo;
 import com.foodyexpress.repository.CustomerRepo;
 
 import antlr.collections.List;
 
+@Service
 public class BillServiceImpl implements BillService {
 
 	@Autowired
-	private BillDao billRepo;
+	private BillRepo billRepo;
 
 	@Autowired
 	CustomerRepo cusDAO;
