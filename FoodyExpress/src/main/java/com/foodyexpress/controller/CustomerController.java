@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.service.CustomerService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/customers")
@@ -39,7 +38,7 @@ public class CustomerController {
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<Customer> deleteCustomer(Customer c) throws CustomerException {
+	public ResponseEntity<Customer> deleteCustomer(@RequestBody Customer c) throws CustomerException {
 		Customer customer = customerService.removeCustomer(c);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
