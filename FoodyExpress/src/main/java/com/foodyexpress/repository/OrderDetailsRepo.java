@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.foodyexpress.model.OrderDetails;
 
 @Repository
-public interface OrderDetailsRepo extends JpaRepository<OrderDetails,Integer> {
+public interface OrderDetailsRepo extends JpaRepository<OrderDetails, Integer> {
 
 }
