@@ -44,6 +44,23 @@ public class CustomerServiceImpl implements CustomerService {
 		// this statement will update customer and overrides the old customer data
 		return customerRepo.save(c);
 	}
+	
+
+
+	@Override
+	public Customer removeCustomerById(Integer customerId) throws CustomerException {
+		
+
+		Optional<Customer> optional = customerRepo.findById(customerId);
+
+		if (optional.isEmpty()) {
+			throw new CustomerException("No customer exist with given customer id :" + customerId);
+		}
+
+		Customer deletedCustomer = optional.get();
+		customerRepo.delete(deletedCustomer);
+		return deletedCustomer;
+	}
 
 	@Override
 	public Customer removeCustomer(Customer c) throws CustomerException {

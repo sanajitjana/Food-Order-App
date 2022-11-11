@@ -9,7 +9,9 @@ public interface CustomerService {
 
 	Customer addCustomer(Customer c) throws CustomerException;
 
-	Customer updateCustomer(Customer c) throws CustomerException;
+	Customer updateCustomer(Customer c) throws CustomerException;	
+	
+	Customer removeCustomerById(Integer customerId) throws CustomerException;
 
 	Customer removeCustomer(Customer c) throws CustomerException;
 

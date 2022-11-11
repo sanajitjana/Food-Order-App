@@ -36,6 +36,12 @@ public class CustomerController {
 		Customer customer = customerService.updateCustomer(c);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Customer> deleteCustomerById(@PathVariable("id") Integer customerId) throws CustomerException {
+		Customer customer = customerService.removeCustomerById(customerId);
+		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+	}
 
 	@DeleteMapping("/delete")
 	public ResponseEntity<Customer> deleteCustomer(@RequestBody Customer c) throws CustomerException {
