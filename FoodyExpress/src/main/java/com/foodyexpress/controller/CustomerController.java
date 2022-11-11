@@ -26,46 +26,31 @@ public class CustomerController {
 
 	@PostMapping("/add")
 	public ResponseEntity<Customer> addCustomer(Customer c) throws CustomerException {
-
 		Customer customer = customerService.addCustomer(c);
-
 		return new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
-
 	}
 
 	@PutMapping("/update")
 	public ResponseEntity<Customer> updateCustomer(Customer c) throws CustomerException {
 		Customer customer = customerService.updateCustomer(c);
-
-		return new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
-
+		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete")
 	public ResponseEntity<Customer> deleteCustomer(Customer c) throws CustomerException {
-
 		Customer customer = customerService.removeCustomer(c);
-
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
-
 	}
 
 	@GetMapping("/getbyId/{id}")
 	public ResponseEntity<Customer> viewCutomer(@PathVariable("id") Integer id) throws CustomerException {
-
 		Customer customer = customerService.viewCustomer(id);
-
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
-
 	}
 
 	@GetMapping("/all")
 	public ResponseEntity<List<Customer>> viewAllCustomers() throws CustomerException {
-
 		List<Customer> customers = customerService.viewAllCustomers();
-
 		return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
-
 	}
-
 }

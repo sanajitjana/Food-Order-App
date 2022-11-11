@@ -30,14 +30,12 @@ public class BillController {
 	public ResponseEntity<Bill> generateBill(@RequestBody Bill bill) throws BillException {
 		Bill myBill = billService.addBill(bill);
 		return new ResponseEntity<Bill>(myBill, HttpStatus.CREATED);
-
 	}
 
 	@PutMapping("/update")
 	public ResponseEntity<Bill> updateBill(@RequestBody Bill bill) throws BillException {
 		Bill myBill = billService.updateBill(bill);
 		return new ResponseEntity<Bill>(myBill, HttpStatus.ACCEPTED);
-
 	}
 
 	@DeleteMapping("/remove/{billId}")
