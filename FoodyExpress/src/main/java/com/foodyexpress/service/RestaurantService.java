@@ -2,6 +2,8 @@ package com.foodyexpress.service;
 
 import java.util.List;
 
+import com.foodyexpress.exception.AddressException;
+import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.exception.RestaurantException;
 import com.foodyexpress.model.Restaurant;
 
@@ -17,9 +19,9 @@ public interface RestaurantService {
 
 	public List<Restaurant> getAllRestaurants() throws RestaurantException;
 
-	public List<Restaurant> viewRestaurantByCity(String location) throws RestaurantException;
+	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantException, AddressException;
 
-	public List<Restaurant> viewRestaurantByItemName(String itemName) throws RestaurantException;
+	public List<Restaurant> viewRestaurantByItemName(String itemName) throws RestaurantException, ItemException;
 
 
 }

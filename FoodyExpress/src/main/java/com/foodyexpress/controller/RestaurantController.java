@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.foodyexpress.exception.AddressException;
 import com.foodyexpress.exception.CustomerException;
+import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.exception.RestaurantException;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.Restaurant;
+import com.foodyexpress.service.AddressService;
 import com.foodyexpress.service.RestaurantService;
 
 @RestController
@@ -26,6 +29,9 @@ public class RestaurantController {
 
 	@Autowired
 	private RestaurantService resService;
+
+	@Autowired
+	private AddressService addresService;
 
 	@PostMapping("/add")
 	public ResponseEntity<Restaurant> addRestaurant(@RequestBody Restaurant res) throws RestaurantException {
@@ -56,6 +62,27 @@ public class RestaurantController {
 	public ResponseEntity<List<Restaurant>> viewAllRestaurant() throws RestaurantException {
 		List<Restaurant> restaurant = resService.getAllRestaurants();
 		return new ResponseEntity<List<Restaurant>>(restaurant, HttpStatus.OK);
+	}
+
+//	@GetMapping("/getRestaurantByAddressId/{id}")
+//	public ResponseEntity<List<Restaurant>> findAllRestaurantByAddresId(@PathVariable("id") Integer addressId)
+//			throws RestaurantException, AddressException {
+//		List<Restaurant> restaurantList = addresService.getAllRestaurantsByAddressId(addressId);
+//		return new ResponseEntity<List<Restaurant>>(restaurantList, HttpStatus.OK);
+//	}
+	
+	@GetMapping("/findNearByRestaurantByCity/{city}")
+	public ResponseEntity<List<Restaurant>> findNearByRestaurantByCityHandler(@PathVariable("city") String city)
+			throws RestaurantException, AddressException {
+		List<Restaurant> restaurantList=resService.viewNearByRestaurant(city);		
+		return new ResponseEntity<List<Restaurant>>(restaurantList, HttpStatus.OK);
+	}
+	
+	@GetMapping("/findNearByRestaurantByItemName/{item}")
+	public ResponseEntity<List<Restaurant>> viewRestaurantByItemNameHandler(@PathVariable("item") String item)
+			throws RestaurantException, ItemException {
+		List<Restaurant> restaurantList=resService.viewRestaurantByItemName(item);		
+		return new ResponseEntity<List<Restaurant>>(restaurantList, HttpStatus.OK);
 	}
 
 }

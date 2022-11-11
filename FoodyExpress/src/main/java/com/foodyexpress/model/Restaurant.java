@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,12 +31,12 @@ public class Restaurant {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer restaurantId;
 	private String restaurantName;
-
-	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Address address;
-
-	@OneToOne(targetEntity = Item.class, cascade = CascadeType.ALL)
+	
+	@JsonIgnore
+	@ManyToMany(targetEntity = Item.class, cascade = CascadeType.ALL, mappedBy = "restaurants")
 	private List<Item> itemList = new ArrayList<>();
 	private String managerName;
 	private String contactNunber;

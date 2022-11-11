@@ -6,8 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.foodyexpress.exception.AddressException;
+import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.exception.RestaurantException;
+import com.foodyexpress.model.Address;
+import com.foodyexpress.model.Item;
 import com.foodyexpress.model.Restaurant;
+import com.foodyexpress.repository.AddressRepo;
+import com.foodyexpress.repository.ItemRepo;
 import com.foodyexpress.repository.RestaurantRepo;
 
 @Service
@@ -16,16 +22,24 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Autowired
 	private RestaurantRepo resRepo;
 
+	@Autowired
+	private AddressRepo addressRepo;
+	
+	@Autowired
+	private ItemRepo itemRepo;
+
 	@Override
 	public Restaurant addRestaurant(Restaurant restaurant) throws RestaurantException {
-		// TODO Auto-generated method stub
 
-		Optional<Restaurant> opt = resRepo.findById(restaurant.getRestaurantId());
-		if (opt.isPresent()) {
-			throw new RestaurantException("Restaurant already exists");
-		} else {
-			return resRepo.save(restaurant);
+		Address address = restaurant.getAddress();
+		address.getRestaurantList().add(restaurant);
+
+		List<Item> itemList = restaurant.getItemList();
+
+		for (Item ele : itemList) {
+			ele.getRestaurants().add(restaurant);
 		}
+		return resRepo.save(restaurant);
 	}
 
 	@Override
@@ -80,15 +94,35 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public List<Restaurant> viewRestaurantByCity(String city) throws RestaurantException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantException, AddressException {
+
+		Address address = addressRepo.findByCity(city);
+		if (address != null) {
+			List<Restaurant> restaurantList = address.getRestaurantList();
+			if (!restaurantList.isEmpty()) {
+				return restaurantList;
+			} else {
+				throw new RestaurantException("No restaurant found!");
+			}
+		} else {
+			throw new AddressException("No address found!");
+		}
 	}
 
 	@Override
-	public List<Restaurant> viewRestaurantByItemName(String itemName) throws RestaurantException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Restaurant> viewRestaurantByItemName(String itemName) throws RestaurantException, ItemException {
+		
+			Item item=itemRepo.findByItemName(itemName);
+			if(item==null) {
+				throw new ItemException("Item not found!");
+			}else {
+				List<Restaurant> restaurantList= item.getRestaurants();
+				if(!restaurantList.isEmpty()) {
+					return restaurantList;
+				}else {
+					throw new RestaurantException("Restaurant not found!");
+				}
+			}
 	}
 
 }
