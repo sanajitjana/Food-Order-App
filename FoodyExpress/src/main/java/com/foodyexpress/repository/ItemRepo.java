@@ -11,4 +11,5 @@ public interface ItemRepo extends JpaRepository<Item, Integer>{
 	
 	public Item findByItemName(String item) throws ItemException;
 	
+	
 }

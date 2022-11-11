@@ -32,10 +32,22 @@ public class ItemServiceImpl implements ItemService{
 		else
 		{
 			Category category=item.getCategory();
+			Category existedCategory=categoryRepo.getCategoryByName(category.getCategoryName());
+			if(existedCategory==null)
+			{
+				category.getItemList().add(item);
+			    return itemRepo.save(item);
+			}
+			else
+			{
+				existedCategory.getItemList().add(item);
+				item.setCategory(existedCategory);
+				categoryRepo.save(existedCategory);
+				return itemRepo.save(item);
+			}
 			
-			category.getItemList().add(item);
-		    return itemRepo.save(item);	
 		}
+		
 	}
 
 	@Override
