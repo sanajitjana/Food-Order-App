@@ -11,19 +11,22 @@ import com.foodyexpress.model.Customer;
 import com.foodyexpress.repository.CustomerRepo;
 
 @Service
-public class CustomerServicedao implements CustomerService {
+public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerRepo customerRepo;
 
 	@Override
 	public Customer addCustomer(Customer c) throws CustomerException {
+		
+		Customer customer= customerRepo.findByEmail(c.getEmail());
 
-		if (c == null) {
-			throw new CustomerException("Null value is not allowed");
+		if (customer != null) {
+			throw new CustomerException("Customer email alreday exists!");
+		}else {
+			return customerRepo.save(c);			
 		}
 
-		return customerRepo.save(c);
 	}
 
 	@Override

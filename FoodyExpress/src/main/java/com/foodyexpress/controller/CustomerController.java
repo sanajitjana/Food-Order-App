@@ -28,7 +28,7 @@ public class CustomerController {
 	@PostMapping("/add")
 	public ResponseEntity<Customer> addCustomer(@RequestBody Customer c) throws CustomerException {
 		Customer customer = customerService.addCustomer(c);
-		return new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update")
@@ -43,7 +43,7 @@ public class CustomerController {
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
 
-	@GetMapping("/getbyId/{id}")
+	@GetMapping("/all/{id}")
 	public ResponseEntity<Customer> viewCutomer(@PathVariable("id") Integer id) throws CustomerException {
 		Customer customer = customerService.viewCustomer(id);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);

@@ -27,43 +27,44 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public String loginAccount(Login login) throws LoginException {
 
-		Optional<Customer> cusOpt = cRepo.findById(login.getUserId());
-		if (cusOpt.isEmpty()) {
+		Customer customer = cRepo.findByEmail(login.getUserName());
+		if (customer != null) {
 
-			Optional<CurrentUserSession> curUserOpt = sRepo.findById(cusOpt.get().getCustomerId());
-			if (curUserOpt.isPresent()) {
+			if (customer.getPassword().equals(login.getPassword())) {
 
-				throw new LoginException("User already Logged In");
-			} else {
+				CurrentUserSession cuurSession = sRepo.findByEmail(login.getUserName());
 
-				if (cusOpt.get().getPassword().equals(login.getPassword())) {
+				if (cuurSession != null) {
+					throw new LoginException("User already Logged In!");
+				} else {
+					CurrentUserSession currentUserSession = new CurrentUserSession();
+					currentUserSession.setEmail(login.getUserName());
+					currentUserSession.setLoginDateTime(LocalDateTime.now());
 
 					String key = RandomString.make(6);
-					CurrentUserSession currentUserSession = new CurrentUserSession(cusOpt.get().getCustomerId(), key,
-							LocalDateTime.now());
+					currentUserSession.setPrivateKey(key);
 
 					sRepo.save(currentUserSession);
-					return currentUserSession.toString();
-				} else
-
-					throw new LoginException("Please Enter a valid password");
+					return "Login Sucessufull!";
+				}
+			} else {
+				throw new LoginException("Please Enter a valid password");
 			}
-		} else {
 
-			throw new LoginException("Please Enter a valid UserId");
+		} else {
+			throw new LoginException("Please Enter a valid username");
 		}
 	}
 
 	@Override
 	public String logoutAccount(String key) throws LoginException {
 
-		CurrentUserSession validCustomerSession = sRepo.findByUuid(key);
-
-		if (validCustomerSession == null) {
-			throw new LoginException("User Not Logged In");
-		} else {
-			sRepo.delete(validCustomerSession);
+		CurrentUserSession currSession = sRepo.findByPrivateKey(key);
+		if (currSession != null) {
+			sRepo.delete(currSession);
 			return "Logged Out!";
+		} else {
+			throw new LoginException("This User not-Logged In");
 		}
 	}
 }
