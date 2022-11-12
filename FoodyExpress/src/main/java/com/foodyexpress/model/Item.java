@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,13 +29,15 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer itemId;
 	private String itemName;
-	@ManyToOne(cascade=CascadeType.ALL)
-	private Category category;
-	private Integer quantity;
-	private double cost;
 	
-	@JsonIgnore	
-	@ManyToMany(targetEntity = Restaurant.class, cascade = CascadeType.ALL)	
-	private List<Restaurant> restaurants=new ArrayList<>();
+	@ManyToOne
+	private Category category;
+
+	private Integer quantity;
+	private Double cost;
+
+	@JsonIgnore
+	@ManyToMany(targetEntity = Restaurant.class)
+	private List<Restaurant> restaurants = new ArrayList<>();
 
 }

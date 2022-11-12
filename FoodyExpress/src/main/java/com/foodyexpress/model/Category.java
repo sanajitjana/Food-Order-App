@@ -23,13 +23,13 @@ import lombok.ToString;
 @ToString
 @Entity
 public class Category {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer categoryId;
 	private String categoryName;
-	@JsonIgnore
-	@OneToMany(targetEntity=Item.class,cascade=CascadeType.ALL)
-	private List<Item> itemList=new ArrayList<>();
 
+	@JsonIgnore
+	@OneToMany(targetEntity = Item.class, cascade = CascadeType.ALL, mappedBy = "category")
+	List<Item> itemList = new ArrayList<>();
 }

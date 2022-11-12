@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.foodyexpress.exception.CategoryException;
 import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.model.Category;
+import com.foodyexpress.model.CategoryDTO;
 import com.foodyexpress.model.Item;
+import com.foodyexpress.model.ItemDTO;
 import com.foodyexpress.service.ItemService;
 
 @RestController
@@ -33,10 +35,10 @@ public class ItemController {
 		return new ResponseEntity<List<Item>>(itemList, HttpStatus.OK);
 	}
 
-	@GetMapping("/get/category")
-	public ResponseEntity<List<Item>> getAllItemByCategory(@RequestBody Category category)
+	@GetMapping("/category")
+	public ResponseEntity<List<Item>> getAllItemByCategory(@RequestBody CategoryDTO categoryDTO)
 			throws ItemException, CategoryException {
-		List<Item> itemList = itemService.getAllItemByCategory(category);
+		List<Item> itemList = itemService.getAllItemByCategory(categoryDTO);
 		return new ResponseEntity<List<Item>>(itemList, HttpStatus.OK);
 	}
 
@@ -48,22 +50,22 @@ public class ItemController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Item> addItem(@RequestBody Item item) throws ItemException {
+	public ResponseEntity<Item> addItem(@RequestBody Item item) throws ItemException, CategoryException {
 		Item savedItem = itemService.addItem(item);
 
 		return new ResponseEntity<Item>(savedItem, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Item> updateItem(@RequestBody Item item) throws ItemException {
-		Item updatedItem = itemService.updateItem(item);
+	public ResponseEntity<Item> updateItem(@RequestBody ItemDTO itemDTO) throws ItemException, CategoryException {
+		Item updatedItem = itemService.updateItem(itemDTO);
 
 		return new ResponseEntity<Item>(updatedItem, HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException {
-		Item deletedItem = itemService.removeItem(item);
+	public ResponseEntity<Item> removeItem(@RequestBody ItemDTO itemDTO) throws ItemException {
+		Item deletedItem = itemService.removeItem(itemDTO);
 
 		return new ResponseEntity<Item>(deletedItem, HttpStatus.OK);
 	}
