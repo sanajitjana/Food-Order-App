@@ -34,7 +34,7 @@
 
 ## Installation & Run
 
-* Before running the API server, you should update the database config inside the [application.properties](https://github.com/nvFARHAN/cowin.gov.in/blob/master/src/main/resources/application.properties) file. 
+* Before running the API server, you should update the database config inside the [application.properties](https://github.com/sanajitjana/star-theory-7179/blob/master/FoodyExpress/src/main/resources/application.properties) file. 
 * Update the port number, username and password as per your local database config.
 
 ```
