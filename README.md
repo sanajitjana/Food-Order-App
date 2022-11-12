@@ -26,9 +26,9 @@
 * Update the port number, username and password as per your local database config.
 
 ```
-    server.port=8889
+    server.port=8088
 
-    spring.datasource.url=jdbc:mysql://localhost:3306/foodyExpress;
+    spring.datasource.url=jdbc:mysql://localhost:3306/fdb;
     spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     spring.datasource.username="Your SQL username"
     spring.datasource.password="Your SQL Password"
