@@ -20,8 +20,8 @@ public class CategoryServiceImpl implements CategoryService {
 	public Category addCategory(Category category) throws CategoryException {
 		// TODO Auto-generated method stub
 
-		Optional<Category> opt = categoryRepo.findById(category.getCategoryId());
-		if (opt.isPresent()) {
+		Category exixtsCatogory = categoryRepo.findByCategoryName(category.getCategoryName());
+		if (exixtsCatogory != null) {
 			throw new CategoryException("Category already exists!");
 		} else {
 			return categoryRepo.save(category);

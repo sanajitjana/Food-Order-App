@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.model.Customer;
+import com.foodyexpress.model.FoodCart;
 import com.foodyexpress.repository.CustomerRepo;
+import com.foodyexpress.repository.FoodCartRepo;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -16,15 +18,24 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private CustomerRepo customerRepo;
 
+	@Autowired
+	private FoodCartRepo foodCartRepo;
+
 	@Override
 	public Customer addCustomer(Customer c) throws CustomerException {
-		
-		Customer customer= customerRepo.findByEmail(c.getEmail());
+
+		Customer customer = customerRepo.findByEmail(c.getEmail());
 
 		if (customer != null) {
 			throw new CustomerException("Customer email alreday exists!");
-		}else {
-			return customerRepo.save(c);			
+		} else {
+			
+			FoodCart foodCart=new FoodCart();
+			c.setCart(foodCart);
+			foodCart.setCustomer(c);
+			foodCartRepo.save(foodCart);
+			
+			return customerRepo.save(c);
 		}
 
 	}
@@ -44,12 +55,9 @@ public class CustomerServiceImpl implements CustomerService {
 		// this statement will update customer and overrides the old customer data
 		return customerRepo.save(c);
 	}
-	
-
 
 	@Override
 	public Customer removeCustomerById(Integer customerId) throws CustomerException {
-		
 
 		Optional<Customer> optional = customerRepo.findById(customerId);
 

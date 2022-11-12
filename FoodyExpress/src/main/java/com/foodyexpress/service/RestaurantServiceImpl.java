@@ -35,7 +35,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 		address.getRestaurantList().add(restaurant);
 
 		List<Item> itemList = restaurant.getItemList();
-
 		for (Item ele : itemList) {
 			ele.getRestaurants().add(restaurant);
 		}

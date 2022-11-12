@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import com.foodyexpress.exception.CategoryException;
 import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.model.Category;
+import com.foodyexpress.model.CategoryDTO;
 import com.foodyexpress.model.Item;
+import com.foodyexpress.model.ItemDTO;
 import com.foodyexpress.repository.CategoryRepo;
 import com.foodyexpress.repository.ItemRepo;
 
@@ -23,41 +25,60 @@ public class ItemServiceImpl implements ItemService {
 	private CategoryRepo categoryRepo;
 
 	@Override
-	public Item addItem(Item item) throws ItemException {
+	public Item addItem(Item item) throws ItemException, CategoryException {
+
 		Item existedItem = itemRepo.findByItemName(item.getItemName());
-		if (existedItem != null) {
-			throw new ItemException("This item already exist...!");
-		} else {
-			Category category = item.getCategory();
-			Category existedCategory = categoryRepo.getCategoryByName(category.getCategoryName());
-			if (existedCategory == null) {
-				category.getItemList().add(item);
+		if (existedItem == null) {
+
+			Category exCategory = categoryRepo.findByCategoryName(item.getCategory().getCategoryName());
+			if (exCategory != null) {
+				exCategory.getItemList().add(item);
+				item.setCategory(exCategory);
 				return itemRepo.save(item);
 			} else {
-				existedCategory.getItemList().add(item);
-				item.setCategory(existedCategory);
-				categoryRepo.save(existedCategory);
-				return itemRepo.save(item);
+				throw new CategoryException("Category doesn't exists!");
 			}
-
-		}
-
-	}
-
-	@Override
-	public Item updateItem(Item item) throws ItemException {
-		Optional<Item> opt = itemRepo.findById(item.getItemId());
-		if (opt.isPresent()) {
-			Item updatedItem = itemRepo.save(item);
-			return updatedItem;
 		} else {
-			throw new ItemException("Item id not found..!");
+			throw new ItemException("Item name already exits!");
 		}
 	}
 
 	@Override
-	public Item removeItem(Item item) throws ItemException {
-		Optional<Item> opt = itemRepo.findById(item.getItemId());
+	public Item updateItem(ItemDTO itemDTO) throws ItemException, CategoryException {
+
+		Optional<Item> opt = itemRepo.findById(itemDTO.getItemId());
+		if (opt.isEmpty())
+			throw new ItemException("Item not found!");
+
+		Item item = opt.get();
+		if (itemDTO.getCatergoryId() != null) {
+			Optional<Category> cat = categoryRepo.findById(itemDTO.getCatergoryId());
+			if (cat.isEmpty())
+				throw new CategoryException("Category not found!");
+
+			Category category = item.getCategory();
+			category.getItemList().remove(item);
+
+			item.setCategory(cat.get());
+			cat.get().getItemList().add(item);
+		}
+
+		if (itemDTO.getCost() != null)
+			item.setCost(itemDTO.getCost());
+
+		if (itemDTO.getQuantity() != null)
+			item.setQuantity(itemDTO.getQuantity());
+
+		if (itemDTO.getItemName() != null)
+			item.setItemName(itemDTO.getItemName());
+
+		return itemRepo.save(item);
+
+	}
+
+	@Override
+	public Item removeItem(ItemDTO itemDTO) throws ItemException {
+		Optional<Item> opt = itemRepo.findById(itemDTO.getItemId());
 		if (opt.isPresent()) {
 			Item deletedItem = opt.get();
 			itemRepo.delete(deletedItem);
@@ -91,11 +112,10 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getAllItemByCategory(Category category) throws ItemException, CategoryException {
-		Optional<Category> opt = categoryRepo.findById(category.getCategoryId());
-		if (opt.isPresent()) {
-			Category existedCategory = opt.get();
-			List<Item> itemList = existedCategory.getItemList();
+	public List<Item> getAllItemByCategory(CategoryDTO categoryDTO) throws ItemException, CategoryException {
+		Category category = categoryRepo.findByCategoryName(categoryDTO.getCategoryName());
+		if (category != null) {
+			List<Item> itemList = category.getItemList();
 			if (itemList.isEmpty()) {
 				throw new ItemException("No item found in this category..!");
 			} else {
@@ -120,5 +140,4 @@ public class ItemServiceImpl implements ItemService {
 			throw new CategoryException("Category does not exist..!");
 		}
 	}
-
 }
