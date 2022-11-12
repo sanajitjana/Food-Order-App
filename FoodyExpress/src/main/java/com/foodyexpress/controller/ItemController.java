@@ -34,6 +34,9 @@ public class ItemController {
 		List<Item> itemList = itemService.getAllItem();
 		return new ResponseEntity<List<Item>>(itemList, HttpStatus.OK);
 	}
+	
+	
+	
 
 	@GetMapping("/category")
 	public ResponseEntity<List<Item>> getAllItemByCategory(@RequestBody CategoryDTO categoryDTO)

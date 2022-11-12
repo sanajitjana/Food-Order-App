@@ -39,6 +39,8 @@ public class RestaurantController {
 		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.ACCEPTED);
 	}
 
+	
+	
 	@PutMapping("/update")
 	public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant res) throws RestaurantException {
 		Restaurant restaurant = resService.updateRestaurant(res);
