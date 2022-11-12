@@ -26,6 +26,12 @@
 7. Cart Module
 8. Error Module
 
+### Used Techs & Tools:
+<!-- language -->
+
+[![](https://skillicons.dev/icons?i=java,spring,hibernate,mysql,git,github)]()
+
+
 ## Installation & Run
 
 * Before running the API server, you should update the database config inside the [application.properties](https://github.com/nvFARHAN/cowin.gov.in/blob/master/src/main/resources/application.properties) file. 
@@ -48,5 +54,5 @@
 
 
 &nbsp;&nbsp;&nbsp;<a href="https://github.com/sanajitjana">Sanajit Jana</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/sakshi00555">Sakshi Kumari</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/ksaurav11">Kumar Saurav</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/Ranjit0979">Ranjit Lagda</a>&nbsp;&nbsp;&nbsp;<a href="https://github.com/dipeshsingh253">Dipesh Singh</a>
-
-
+<p align="center">
+<img style="width:35%" src="https://www.bing.com/th/id/OGC.7a7082d2d73b6c995db6da795b66ae85?pid=1.7&rurl=https%3a%2f%2fstatic.dribbble.com%2fusers%2f662638%2fscreenshots%2f4803914%2fthumbsupdribs2.gif&ehk=Y%2b6LnEHbNx8qdJcdrFatveXJrSnRlK7z%2bTAB4v%2blc%2fE%3d"/></p>
