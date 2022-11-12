@@ -20,65 +20,58 @@ import com.foodyexpress.model.Category;
 import com.foodyexpress.model.Item;
 import com.foodyexpress.service.ItemService;
 
-
-
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-	
+
 	@Autowired
 	private ItemService itemService;
-	
-	@PostMapping("/items")
-	public ResponseEntity<Item> addItem(@RequestBody Item item) throws ItemException
-	{
-		Item savedItem=itemService.addItem(item);
-		
-		return new ResponseEntity<Item>(savedItem,HttpStatus.CREATED);
+
+	@GetMapping("/all")
+	public ResponseEntity<List<Item>> getAllItem() throws ItemException {
+		List<Item> itemList = itemService.getAllItem();
+		return new ResponseEntity<List<Item>>(itemList, HttpStatus.OK);
 	}
 
-	@PutMapping("/items")
-	public ResponseEntity<Item> updateItem(@RequestBody Item item) throws ItemException
-	{
-		Item updatedItem=itemService.updateItem(item);
-		
-		return new ResponseEntity<Item>(updatedItem,HttpStatus.ACCEPTED);
+	@GetMapping("/get/category")
+	public ResponseEntity<List<Item>> getAllItemByCategory(@RequestBody Category category)
+			throws ItemException, CategoryException {
+		List<Item> itemList = itemService.getAllItemByCategory(category);
+		return new ResponseEntity<List<Item>>(itemList, HttpStatus.OK);
 	}
-	
-	@DeleteMapping("/items")
-	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException
-	{
-		Item deletedItem=itemService.removeItem(item);
-		
-		return new ResponseEntity<Item>(deletedItem,HttpStatus.OK);
+
+	@GetMapping("/get/{categoryName}")
+	public ResponseEntity<List<Item>> getAllItemByCategoryName(@PathVariable String categoryName)
+			throws ItemException, CategoryException {
+		List<Item> itemList = itemService.getAllItemByCategoryName(categoryName);
+		return new ResponseEntity<List<Item>>(itemList, HttpStatus.OK);
 	}
-	
-	@DeleteMapping("/items/{id}")
-	public ResponseEntity<Item> removeItemById(@PathVariable("id") Integer id) throws ItemException
-	{
-		Item deletedItem=itemService.removeItemById(id);
-		
-		return new ResponseEntity<Item>(deletedItem,HttpStatus.OK);
+
+	@PostMapping("/add")
+	public ResponseEntity<Item> addItem(@RequestBody Item item) throws ItemException {
+		Item savedItem = itemService.addItem(item);
+
+		return new ResponseEntity<Item>(savedItem, HttpStatus.CREATED);
 	}
-	
-	@GetMapping("/items")
-	public ResponseEntity<List<Item>> getAllItem() throws ItemException
-	{
-		List<Item> itemList=itemService.getAllItem();
-		return new ResponseEntity<List<Item>>(itemList,HttpStatus.OK);
+
+	@PutMapping("/update")
+	public ResponseEntity<Item> updateItem(@RequestBody Item item) throws ItemException {
+		Item updatedItem = itemService.updateItem(item);
+
+		return new ResponseEntity<Item>(updatedItem, HttpStatus.ACCEPTED);
 	}
-	
-	@GetMapping("/itemsByCategory")
-	public ResponseEntity<List<Item>> getAllItemBycategory(@RequestBody Category category) throws ItemException, CategoryException
-	{
-		List<Item> itemList=itemService.getAllItemByCategory(category);
-		return new ResponseEntity<List<Item>>(itemList,HttpStatus.OK);
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<Item> removeItem(@RequestBody Item item) throws ItemException {
+		Item deletedItem = itemService.removeItem(item);
+
+		return new ResponseEntity<Item>(deletedItem, HttpStatus.OK);
 	}
-	
-	@GetMapping("/items/{categoryName}")
-	public ResponseEntity<List<Item>> getAllItemBycategory(@PathVariable String categoryName) throws ItemException, CategoryException
-	{
-		List<Item> itemList=itemService.getAllItemByCategoryName(categoryName);
-		return new ResponseEntity<List<Item>>(itemList,HttpStatus.OK);
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Item> removeItemById(@PathVariable("id") Integer id) throws ItemException {
+		Item deletedItem = itemService.removeItemById(id);
+
+		return new ResponseEntity<Item>(deletedItem, HttpStatus.OK);
 	}
 }

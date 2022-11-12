@@ -14,140 +14,110 @@ import com.foodyexpress.repository.CategoryRepo;
 import com.foodyexpress.repository.ItemRepo;
 
 @Service
-public class ItemServiceImpl implements ItemService{
-	
+public class ItemServiceImpl implements ItemService {
+
 	@Autowired
 	private ItemRepo itemRepo;
-	
+
 	@Autowired
 	private CategoryRepo categoryRepo;
 
 	@Override
-	public Item addItem(Item item) throws ItemException{
-		Item existedItem=itemRepo.findByItemName(item.getItemName());
-		if(existedItem!=null)
-		{
-			throw new ItemException("Item already exists...!");
-		}
-		else
-		{
-			Category category=item.getCategory();
-			Category existedCategory=categoryRepo.getCategoryByName(category.getCategoryName());
-			if(existedCategory==null)
-			{
+	public Item addItem(Item item) throws ItemException {
+		Item existedItem = itemRepo.findByItemName(item.getItemName());
+		if (existedItem != null) {
+			throw new ItemException("This item already exist...!");
+		} else {
+			Category category = item.getCategory();
+			Category existedCategory = categoryRepo.getCategoryByName(category.getCategoryName());
+			if (existedCategory == null) {
 				category.getItemList().add(item);
-			    return itemRepo.save(item);
-			}
-			else
-			{
+				return itemRepo.save(item);
+			} else {
 				existedCategory.getItemList().add(item);
 				item.setCategory(existedCategory);
 				categoryRepo.save(existedCategory);
 				return itemRepo.save(item);
 			}
-			
+
 		}
-		
+
 	}
 
 	@Override
 	public Item updateItem(Item item) throws ItemException {
-		Optional<Item> opt=itemRepo.findById(item.getItemId());
-		if(opt.isPresent())
-		{
-			Item updatedItem=itemRepo.save(item);
+		Optional<Item> opt = itemRepo.findById(item.getItemId());
+		if (opt.isPresent()) {
+			Item updatedItem = itemRepo.save(item);
 			return updatedItem;
-		}
-		else
-		{
-			throw new ItemException("Item does not exist..!");
+		} else {
+			throw new ItemException("Item id not found..!");
 		}
 	}
 
 	@Override
 	public Item removeItem(Item item) throws ItemException {
-		Optional<Item> opt=itemRepo.findById(item.getItemId());
-		if(opt.isPresent())
-		{
-			Item deletedItem=opt.get();
+		Optional<Item> opt = itemRepo.findById(item.getItemId());
+		if (opt.isPresent()) {
+			Item deletedItem = opt.get();
 			itemRepo.delete(deletedItem);
 			return deletedItem;
+		} else {
+			throw new ItemException("Item id not found..!");
 		}
-		else
-		{
-			throw new ItemException("Item does not exist..!");
-		}
-		
+
 	}
 
 	@Override
 	public Item removeItemById(Integer itemId) throws ItemException {
-		Optional<Item> opt=itemRepo.findById(itemId);
-		if(opt.isPresent())
-		{
-			Item deletedItem=opt.get();
+		Optional<Item> opt = itemRepo.findById(itemId);
+		if (opt.isPresent()) {
+			Item deletedItem = opt.get();
 			itemRepo.delete(deletedItem);
 			return deletedItem;
-		}
-		else
-		{
-			throw new ItemException("Item with id "+itemId+" does not exist..!");
+		} else {
+			throw new ItemException("Item id not found..!");
 		}
 	}
 
 	@Override
 	public List<Item> getAllItem() throws ItemException {
-		List<Item> itemList=itemRepo.findAll();
-		if(itemList.isEmpty())
-		{
-			throw new ItemException("no item found..!");
-		}
-		else
-		{
-		return itemList;
+		List<Item> itemList = itemRepo.findAll();
+		if (itemList.isEmpty()) {
+			throw new ItemException("Empty item list..!");
+		} else {
+			return itemList;
 		}
 	}
 
 	@Override
 	public List<Item> getAllItemByCategory(Category category) throws ItemException, CategoryException {
-		Optional<Category> opt=categoryRepo.findById(category.getCatId());
-		if(opt.isPresent())
-		{
-			Category existedCategory=opt.get();
-			List<Item> itemList=existedCategory.getItemList();
-			if(itemList.isEmpty())
-			{
-				throw new ItemException("no item found in this category...!");
-			}
-			else
-			{
+		Optional<Category> opt = categoryRepo.findById(category.getCategoryId());
+		if (opt.isPresent()) {
+			Category existedCategory = opt.get();
+			List<Item> itemList = existedCategory.getItemList();
+			if (itemList.isEmpty()) {
+				throw new ItemException("No item found in this category..!");
+			} else {
 				return itemList;
 			}
-		}
-		else
-		{
-			throw new CategoryException("category does not exist..!");
+		} else {
+			throw new CategoryException("Category does not exist..!");
 		}
 	}
 
 	@Override
 	public List<Item> getAllItemByCategoryName(String categoryName) throws ItemException, CategoryException {
-		Category category=categoryRepo.findByCategoryName(categoryName);
-		if(category!=null)
-		{
-			List<Item> itemList=category.getItemList();
-			if(itemList.isEmpty())
-			{
-				throw new ItemException("no item found in this category...!");
-			}
-			else
-			{
+		Category category = categoryRepo.findByCategoryName(categoryName);
+		if (category != null) {
+			List<Item> itemList = category.getItemList();
+			if (itemList.isEmpty()) {
+				throw new ItemException("No item found in this category..!");
+			} else {
 				return itemList;
 			}
-		}
-		else
-		{
-			throw new CategoryException("category does not exist..!");
+		} else {
+			throw new CategoryException("Category does not exist..!");
 		}
 	}
 
