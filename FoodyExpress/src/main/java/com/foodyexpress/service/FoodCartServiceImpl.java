@@ -48,9 +48,9 @@ public class FoodCartServiceImpl implements FoodCartService {
 //	}
 
 	@Override
-	public FoodCart addItemToCart(CustomerDTO customerDTO, ItemDTO itemDTO) throws ItemException, CustomerException {
+	public FoodCart addItemToCart(Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException {
 		
-		Optional<Customer> opt = customerRepo.findById(customerDTO.getCustomerId());
+		Optional<Customer> opt = customerRepo.findById(customerId);
 		if (opt.isEmpty())
 			throw new CustomerException("Customer not found!");
 		
@@ -184,8 +184,9 @@ public class FoodCartServiceImpl implements FoodCartService {
 
 		if (opt.isPresent()) {
 			FoodCart foodCart = opt.get();
-			foodcartRepo.delete(foodCart);
-			return foodCart;
+			foodCart.getItemList().clear();
+			return foodcartRepo.save(foodCart);
+			
 		} else {
 			throw new FoodCartException("Food Cart not found!");
 		}
