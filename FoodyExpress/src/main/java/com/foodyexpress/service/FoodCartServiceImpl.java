@@ -58,10 +58,25 @@ public class FoodCartServiceImpl implements FoodCartService {
 		if (itemOpt.isEmpty())
 			throw new ItemException("Item not found!");
 		
+		
 		Customer customer = opt.get();
 		FoodCart foodCart = customer.getCart();
+		List<Item> itemList=foodCart.getItemList();
+		boolean flag=true;
+		for(int i=0;i<itemList.size();i++)
+		{
+			Item element=itemList.get(i);
+			if(element.getItemId()==itemDTO.getItemId())
+			{
+				element.setQuantity(element.getQuantity()+1);
+				flag=false;
+			}
+		}
+		if(flag)
+		{
+			foodCart.getItemList().add(itemOpt.get());
+		}
 		
-		foodCart.getItemList().add(itemOpt.get());
 		foodcartRepo.save(foodCart);		
 		return foodCart;
 		

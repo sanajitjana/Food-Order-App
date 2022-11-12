@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodyexpress.exception.BillException;
+import com.foodyexpress.exception.CustomerException;
+import com.foodyexpress.exception.OrderDetailsException;
 import com.foodyexpress.model.Bill;
 import com.foodyexpress.service.BillService;
 
@@ -24,8 +27,8 @@ public class BillController {
 	BillService billService;
 
 	@PostMapping("/add")
-	public ResponseEntity<Bill> generateBill(@RequestBody Bill bill) throws BillException {
-		Bill myBill = billService.addBill(bill);
+	public ResponseEntity<Bill> generateBill(@RequestParam Integer customerId,@RequestParam Integer orderId ) throws BillException, CustomerException, OrderDetailsException {
+		Bill myBill = billService.generateBill(customerId, orderId);
 		return new ResponseEntity<Bill>(myBill, HttpStatus.CREATED);
 	}
 

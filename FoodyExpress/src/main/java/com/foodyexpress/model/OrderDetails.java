@@ -26,7 +26,7 @@ public class OrderDetails {
 	private Integer orderId;
 	private LocalDateTime orderDate;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(targetEntity=FoodCart.class)
 	private FoodCart foodCart;
 	private String orderStatus;
 
