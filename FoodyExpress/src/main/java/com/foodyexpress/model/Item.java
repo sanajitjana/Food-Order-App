@@ -31,7 +31,8 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer itemId;
 	private String itemName;
-	private String category;
+	@ManyToOne(cascade=CascadeType.ALL)
+	private Category category;
 	private Integer quantity;
 	private double cost;
 	
