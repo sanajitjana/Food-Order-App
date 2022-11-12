@@ -19,7 +19,7 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer catId;
+	private Integer categoryId;
 	private String categoryName;
 
 }
