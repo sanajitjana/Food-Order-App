@@ -9,7 +9,7 @@ import com.foodyexpress.model.ItemDTO;
 
 public interface FoodCartService {
 	
-	public FoodCart addItemToCart(CustomerDTO customerDTO, ItemDTO itemDTO) throws ItemException, CustomerException;
+	public FoodCart addItemToCart(Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException;
 	
 	public FoodCart increaseItemQuantity(Integer cartId, Integer quantity, Integer itemId) throws FoodCartException, ItemException;
 

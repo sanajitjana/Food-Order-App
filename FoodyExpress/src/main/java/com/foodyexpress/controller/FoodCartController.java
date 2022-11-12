@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,10 +29,10 @@ public class FoodCartController {
 	@Autowired
 	private FoodCartService foodCartService;
 
-	@PostMapping("/addtocart")
-	public ResponseEntity<FoodCart> addItemToCartHandler(@RequestBody CustomerDTO customerDTO,
+	@PostMapping("/addtocart/{customerId}")
+	public ResponseEntity<FoodCart> addItemToCartHandler(@PathVariable("customerId") Integer customerId,
 			@RequestBody ItemDTO itemDTO) throws ItemException, CustomerException {
-		FoodCart foodCart = foodCartService.addItemToCart(customerDTO, itemDTO);
+		FoodCart foodCart = foodCartService.addItemToCart(customerId, itemDTO);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 
@@ -59,7 +60,7 @@ public class FoodCartController {
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<FoodCart> removeCartHandler(@RequestParam Integer cartId)
+	public ResponseEntity<FoodCart> clearCartHandler(@RequestParam Integer cartId)
 			throws ItemException, CustomerException, FoodCartException {
 		FoodCart foodCart = foodCartService.removeCart(cartId);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);

@@ -31,10 +31,9 @@ public class CustomerServiceImpl implements CustomerService {
 		} else {
 			
 			FoodCart foodCart=new FoodCart();
-			c.setCart(foodCart);
-			foodCart.setCustomer(c);
 			foodCartRepo.save(foodCart);
-			
+			foodCart.setCustomer(c);
+			c.setCart(foodCart);
 			return customerRepo.save(c);
 		}
 
