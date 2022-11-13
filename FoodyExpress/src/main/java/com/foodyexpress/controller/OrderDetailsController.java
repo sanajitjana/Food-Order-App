@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.exception.FoodCartException;
 import com.foodyexpress.exception.ItemException;
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.exception.OrderDetailsException;
 import com.foodyexpress.model.OrderDetails;
 import com.foodyexpress.service.OrderService;
@@ -28,29 +29,29 @@ public class OrderDetailsController {
 	private OrderService orderService;
 
 	@PostMapping("/add/{customerId}")
-	public ResponseEntity<OrderDetails> saveOrderDetails(@PathVariable("customerId")Integer customerId) throws CustomerException, FoodCartException {
-		OrderDetails savedOrder = orderService.addOrder(customerId);
+	public ResponseEntity<OrderDetails> saveOrderDetails(@RequestParam(required = false) String key, @PathVariable("customerId")Integer customerId) throws CustomerException, FoodCartException, LoginException {
+		OrderDetails savedOrder = orderService.addOrder(key, customerId);
 		return new ResponseEntity<OrderDetails>(savedOrder, HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<OrderDetails> updateOrderDetails(@RequestParam Integer orderId,@RequestParam Integer customerId)
-			throws OrderDetailsException, CustomerException, FoodCartException {
-		OrderDetails updatedOrderDetails = orderService.updateOrder(orderId,customerId);
+	public ResponseEntity<OrderDetails> updateOrderDetails(@RequestParam(required = false) String key, @RequestParam Integer orderId,@RequestParam Integer customerId)
+			throws OrderDetailsException, CustomerException, FoodCartException, LoginException {
+		OrderDetails updatedOrderDetails = orderService.updateOrder(key, orderId,customerId);
 		return new ResponseEntity<OrderDetails>(updatedOrderDetails, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/remove/{orderId}")
-	public ResponseEntity<OrderDetails> removerOrderDetails(@PathVariable("orderId") Integer orderId)
-			throws OrderDetailsException {
-		OrderDetails deletedOrderDetails = orderService.removeOrder(orderId);
+	public ResponseEntity<OrderDetails> removerOrderDetails(@RequestParam(required = false) String key, @PathVariable("orderId") Integer orderId)
+			throws OrderDetailsException, LoginException {
+		OrderDetails deletedOrderDetails = orderService.removeOrder(key, orderId);
 		return new ResponseEntity<OrderDetails>(deletedOrderDetails, HttpStatus.OK);
 	}
 
 	@GetMapping("/view/{orderId}")
-	public ResponseEntity<OrderDetails> viewOrderDetails(@PathVariable("orderId") Integer orderId)
-			throws OrderDetailsException {
-		OrderDetails orderDetails = orderService.viewOrder(orderId);
+	public ResponseEntity<OrderDetails> viewOrderDetails(@RequestParam(required = false) String key, @PathVariable("orderId") Integer orderId)
+			throws OrderDetailsException, LoginException {
+		OrderDetails orderDetails = orderService.viewOrder(key, orderId);
 		return new ResponseEntity<OrderDetails>(orderDetails, HttpStatus.OK);
 	}
 
