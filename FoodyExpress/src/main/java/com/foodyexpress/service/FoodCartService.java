@@ -3,19 +3,20 @@ package com.foodyexpress.service;
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.exception.FoodCartException;
 import com.foodyexpress.exception.ItemException;
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.model.CustomerDTO;
 import com.foodyexpress.model.FoodCart;
 import com.foodyexpress.model.ItemDTO;
 
 public interface FoodCartService {
 	
-	public FoodCart addItemToCart(Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException;
+	public FoodCart addItemToCart(String key, Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException, LoginException;
 	
-	public FoodCart increaseItemQuantity(Integer cartId, Integer quantity, Integer itemId) throws FoodCartException, ItemException;
+	public FoodCart increaseItemQuantity(String key, Integer cartId, Integer quantity, Integer itemId) throws FoodCartException, ItemException, LoginException;
 
-	public FoodCart decreaseItemQuantity(Integer cartId, Integer quantity, Integer itemId) throws FoodCartException, ItemException;
+	public FoodCart decreaseItemQuantity(String key, Integer cartId, Integer quantity, Integer itemId) throws FoodCartException, ItemException, LoginException;
 	
-	public FoodCart removeItem(Integer cartId, Integer itemId) throws FoodCartException, ItemException;
+	public FoodCart removeItem(String key, Integer cartId, Integer itemId) throws FoodCartException, ItemException, LoginException;
 	
-	public FoodCart removeCart(Integer cartId) throws FoodCartException;
+	public FoodCart removeCart(String key, Integer cartId) throws FoodCartException, LoginException;
 }
