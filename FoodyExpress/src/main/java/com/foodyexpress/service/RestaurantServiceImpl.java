@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.foodyexpress.exception.AddressException;
 import com.foodyexpress.exception.ItemException;
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.exception.RestaurantException;
 import com.foodyexpress.model.Address;
+import com.foodyexpress.model.CurrentUserSession;
 import com.foodyexpress.model.Item;
 import com.foodyexpress.model.Restaurant;
 import com.foodyexpress.repository.AddressRepo;
+import com.foodyexpress.repository.CurrentUserSessionRepo;
 import com.foodyexpress.repository.ItemRepo;
 import com.foodyexpress.repository.RestaurantRepo;
 
@@ -24,43 +27,78 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Autowired
 	private AddressRepo addressRepo;
-	
+
 	@Autowired
 	private ItemRepo itemRepo;
 
-	@Override
-	public Restaurant addRestaurant(Restaurant restaurant) throws RestaurantException {
-
-		Address address = restaurant.getAddress();
-		address.getRestaurantList().add(restaurant);
-
-		List<Item> itemList = restaurant.getItemList();
-		for (Item ele : itemList) {
-			ele.getRestaurants().add(restaurant);
-		}
-		return resRepo.save(restaurant);
-	}
+	@Autowired
+	private CurrentUserSessionRepo currSession;
 
 	@Override
-	public Restaurant updateRestaurant(Restaurant restaurant) throws RestaurantException {
-		// TODO Auto-generated method stub
+	public Restaurant addRestaurant(String key, Restaurant restaurant) throws RestaurantException, LoginException {
 
-		Optional<Restaurant> opt = resRepo.findById(restaurant.getRestaurantId());
-		if (opt.isPresent()) {
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess != null && currSess.getRole().equalsIgnoreCase("admin")) {
+
+			Address address = restaurant.getAddress();
+			address.getRestaurantList().add(restaurant);
+
+			List<Item> itemList = restaurant.getItemList();
+			for (Item ele : itemList) {
+				ele.getRestaurants().add(restaurant);
+			}
 			return resRepo.save(restaurant);
-		} else {
-			throw new RestaurantException("Restaurant id not found!");
-		}
+		} else
+			throw new LoginException("Admin login required");
 	}
 
 	@Override
-	public Restaurant removeRestaurant(Integer restaurantId) throws RestaurantException {
+	public Restaurant updateRestaurant(String key, Restaurant restaurant) throws RestaurantException, LoginException {
 		// TODO Auto-generated method stub
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess != null && currSess.getRole().equalsIgnoreCase("admin")) {
+
+			Optional<Restaurant> opt = resRepo.findById(restaurant.getRestaurantId());
+			if (opt.isPresent()) {
+				return resRepo.save(restaurant);
+			} else {
+				throw new RestaurantException("Restaurant id not found!");
+			}
+		} else
+			throw new LoginException("Admin login required");
+	}
+
+	@Override
+	public Restaurant removeRestaurant(String key, Integer restaurantId) throws RestaurantException, LoginException {
+		// TODO Auto-generated method stub
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess != null && currSess.getRole().equalsIgnoreCase("admin")) {
+
+			Optional<Restaurant> opt = resRepo.findById(restaurantId);
+			if (opt.isPresent()) {
+				Restaurant restaurant = opt.get();
+				resRepo.delete(restaurant);
+				return restaurant;
+			} else {
+				throw new RestaurantException("Restaurant id not found!");
+			}
+		} else
+			throw new LoginException("Admin login required");
+	}
+
+	@Override
+	public Restaurant viewRestaurantById(String key, Integer restaurantId) throws RestaurantException, LoginException {
+		// TODO Auto-generated method stub
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<Restaurant> opt = resRepo.findById(restaurantId);
 		if (opt.isPresent()) {
 			Restaurant restaurant = opt.get();
-			resRepo.delete(restaurant);
 			return restaurant;
 		} else {
 			throw new RestaurantException("Restaurant id not found!");
@@ -68,21 +106,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public Restaurant viewRestaurantById(Integer restaurantId) throws RestaurantException {
+	public List<Restaurant> getAllRestaurants(String key) throws RestaurantException, LoginException {
 		// TODO Auto-generated method stub
 
-		Optional<Restaurant> opt = resRepo.findById(restaurantId);
-		if (opt.isPresent()) {
-			Restaurant restaurant = opt.get();
-			return restaurant;
-		} else {
-			throw new RestaurantException("Restaurant id not found!");
-		}
-	}
-
-	@Override
-	public List<Restaurant> getAllRestaurants() throws RestaurantException {
-		// TODO Auto-generated method stub
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		List<Restaurant> restaurantList = resRepo.findAll();
 		if (!restaurantList.isEmpty()) {
@@ -93,7 +122,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public List<Restaurant> viewNearByRestaurant(String city) throws RestaurantException, AddressException {
+	public List<Restaurant> viewNearByRestaurant(String key, String city)
+			throws RestaurantException, AddressException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Address address = addressRepo.findByCity(city);
 		if (address != null) {
@@ -109,19 +143,24 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public List<Restaurant> viewRestaurantByItemName(String itemName) throws RestaurantException, ItemException {
-		
-			Item item=itemRepo.findByItemName(itemName);
-			if(item==null) {
-				throw new ItemException("Item not found!");
-			}else {
-				List<Restaurant> restaurantList= item.getRestaurants();
-				if(!restaurantList.isEmpty()) {
-					return restaurantList;
-				}else {
-					throw new RestaurantException("Restaurant not found!");
-				}
+	public List<Restaurant> viewRestaurantByItemName(String key, String itemName)
+			throws RestaurantException, ItemException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
+
+		Item item = itemRepo.findByItemName(itemName);
+		if (item == null) {
+			throw new ItemException("Item not found!");
+		} else {
+			List<Restaurant> restaurantList = item.getRestaurants();
+			if (!restaurantList.isEmpty()) {
+				return restaurantList;
+			} else {
+				throw new RestaurantException("Restaurant not found!");
 			}
+		}
 	}
 
 }
