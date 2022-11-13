@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,8 +29,11 @@ public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer itemId;
+	
+	@NotNull(message = "Name is rqquire")
 	private String itemName;
 	
+	@NotNull(message = "Category is rqquire")
 	@ManyToOne
 	private Category category;
 

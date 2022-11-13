@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.foodyexpress.exception.LoginException;
+import com.foodyexpress.model.Admin;
 import com.foodyexpress.model.CurrentUserSession;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.Login;
+import com.foodyexpress.model.LoginDTO;
 import com.foodyexpress.repository.CustomerRepo;
+import com.foodyexpress.repository.AdminRepo;
 import com.foodyexpress.repository.CurrentUserSessionRepo;
 
 import net.bytebuddy.utility.RandomString;
@@ -19,52 +22,103 @@ import net.bytebuddy.utility.RandomString;
 public class LoginServiceImpl implements LoginService {
 
 	@Autowired
-	private CustomerRepo cRepo;
+	private CustomerRepo customerRepo;
 
 	@Autowired
-	private CurrentUserSessionRepo sRepo;
+	private AdminRepo adminRepo;
+
+	@Autowired
+	private CurrentUserSessionRepo sessionRepo;
 
 	@Override
-	public String loginAccount(Login login) throws LoginException {
+	public String loginAccount(LoginDTO loginDTO) throws LoginException {
 
-		Customer customer = cRepo.findByEmail(login.getUserName());
-		if (customer != null) {
+		if (loginDTO.getRole().equalsIgnoreCase("customer")) {
 
-			if (customer.getPassword().equals(login.getPassword())) {
+			Customer customer = customerRepo.findByEmail(loginDTO.getEmail());
+			if (customer == null)
+				throw new LoginException("Invalid email");
 
-				CurrentUserSession cuurSession = sRepo.findByEmail(login.getUserName());
+			if (customer.getPassword().equals(loginDTO.getPassword())) {
 
-				if (cuurSession != null) {
-					throw new LoginException("User already Logged In!");
-				} else {
-					CurrentUserSession currentUserSession = new CurrentUserSession();
-					currentUserSession.setEmail(login.getUserName());
-					currentUserSession.setLoginDateTime(LocalDateTime.now());
+				CurrentUserSession cuurSession = sessionRepo.findByEmail(loginDTO.getEmail());
 
-					String key = RandomString.make(6);
-					currentUserSession.setPrivateKey(key);
+				if (cuurSession != null)
+					throw new LoginException("User already logged-In!");
 
-					sRepo.save(currentUserSession);
-					return "Login Sucessufull!";
-				}
+				CurrentUserSession currentUserSession = new CurrentUserSession();
+				currentUserSession.setEmail(loginDTO.getEmail());
+				currentUserSession.setLoginDateTime(LocalDateTime.now());
+				currentUserSession.setRole("customer");
+				String privateKey = RandomString.make(6);
+				currentUserSession.setPrivateKey(privateKey);
+
+				sessionRepo.save(currentUserSession);
+				return "Login Sucessufull!";
 			} else {
 				throw new LoginException("Please Enter a valid password");
 			}
 
-		} else {
-			throw new LoginException("Please Enter a valid username");
+		} else if (loginDTO.getRole().equalsIgnoreCase("admin")) {
+			Admin admin = adminRepo.findByEmail(loginDTO.getEmail());
+			if (admin == null)
+				throw new LoginException("Invalid email");
+
+			if (admin.getPassword().equals(loginDTO.getPassword())) {
+
+				CurrentUserSession cuurSession = sessionRepo.findByEmail(loginDTO.getEmail());
+
+				if (cuurSession != null)
+					throw new LoginException("User already logged-In!");
+
+				CurrentUserSession currentUserSession = new CurrentUserSession();
+				currentUserSession.setEmail(loginDTO.getEmail());
+				currentUserSession.setLoginDateTime(LocalDateTime.now());
+				currentUserSession.setRole("admin");
+				String privateKey = RandomString.make(6);
+				currentUserSession.setPrivateKey(privateKey);
+
+				sessionRepo.save(currentUserSession);
+				return "Login Sucessufull!";
+			} else {
+				throw new LoginException("Please Enter a valid password");
+			}
 		}
+		return null;
 	}
 
 	@Override
-	public String logoutAccount(String key) throws LoginException {
+	public String logoutAccount(String role, String key) throws LoginException {
 
-		CurrentUserSession currSession = sRepo.findByPrivateKey(key);
-		if (currSession != null) {
-			sRepo.delete(currSession);
-			return "Logged Out!";
-		} else {
-			throw new LoginException("This User not-Logged In");
-		}
+		if (role.equalsIgnoreCase("customer")) {
+
+			CurrentUserSession currSession = sessionRepo.findByPrivateKey(key);
+			if (currSession == null)
+				throw new LoginException("Invalid key");
+
+			if (currSession.getRole().equalsIgnoreCase("customer")) {
+
+				sessionRepo.delete(currSession);
+				return "Logged Out!";
+
+			} else
+				throw new LoginException("Invalid role");
+
+		} else if (role.equalsIgnoreCase("admin")) {
+
+			CurrentUserSession currSession = sessionRepo.findByPrivateKey(key);
+			if (currSession == null)
+				throw new LoginException("Invalid key");
+
+			if (currSession.getRole().equalsIgnoreCase("admin")) {
+
+				sessionRepo.delete(currSession);
+				return "Logged Out!";
+
+			} else
+				throw new LoginException("Invalid role");
+
+		} else
+			throw new LoginException("Invalid role");
 	}
 }

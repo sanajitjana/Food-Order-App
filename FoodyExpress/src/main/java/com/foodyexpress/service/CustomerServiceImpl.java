@@ -22,19 +22,19 @@ public class CustomerServiceImpl implements CustomerService {
 	private FoodCartRepo foodCartRepo;
 
 	@Override
-	public Customer addCustomer(Customer c) throws CustomerException {
+	public Customer addCustomer(Customer customer) throws CustomerException {
 
-		Customer customer = customerRepo.findByEmail(c.getEmail());
+		Customer existsCustomer = customerRepo.findByEmail(customer.getEmail());
 
-		if (customer != null) {
+		if (existsCustomer != null) {
 			throw new CustomerException("Customer email alreday exists!");
 		} else {
-			
-			FoodCart foodCart=new FoodCart();
+
+			FoodCart foodCart = new FoodCart();
 			foodCartRepo.save(foodCart);
-			foodCart.setCustomer(c);
-			c.setCart(foodCart);
-			return customerRepo.save(c);
+			foodCart.setCustomer(customer);
+			customer.setCart(foodCart);
+			return customerRepo.save(customer);
 		}
 
 	}

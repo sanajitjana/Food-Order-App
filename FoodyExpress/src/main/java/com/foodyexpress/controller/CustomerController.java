@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodyexpress.exception.CustomerException;
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.model.Customer;
+import com.foodyexpress.model.Login;
 import com.foodyexpress.service.CustomerService;
+import com.foodyexpress.service.LoginService;
 
 @RestController
 @RequestMapping("/customers")
@@ -26,19 +30,20 @@ public class CustomerController {
 	private CustomerService customerService;
 
 	@PostMapping("/add")
-	public ResponseEntity<Customer> addCustomer(@RequestBody Customer c) throws CustomerException {
-		Customer customer = customerService.addCustomer(c);
-		return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
+	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) throws CustomerException {
+		Customer returnCustomer = customerService.addCustomer(customer);
+		return new ResponseEntity<Customer>(returnCustomer, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer c) throws CustomerException {
-		Customer customer = customerService.updateCustomer(c);
-		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) throws CustomerException {
+		Customer returnCustomer = customerService.updateCustomer(customer);
+		return new ResponseEntity<Customer>(returnCustomer, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Customer> deleteCustomerById(@PathVariable("id") Integer customerId) throws CustomerException {
+	public ResponseEntity<Customer> deleteCustomerById(@PathVariable("id") Integer customerId)
+			throws CustomerException {
 		Customer customer = customerService.removeCustomerById(customerId);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
