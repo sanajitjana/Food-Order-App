@@ -37,7 +37,7 @@ public class FoodCartServiceImpl implements FoodCartService {
 	private CurrentUserSessionRepo currSession;
 
 	@Override
-	public FoodCart addItemToCart(String key, Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException, LoginException {
+	public FoodCart addItemToCart(String key, Integer customerId, Integer itemId) throws ItemException, CustomerException, LoginException {
 		
 		CurrentUserSession currSess = currSession.findByPrivateKey(key);
 		if (currSess == null)
@@ -47,7 +47,7 @@ public class FoodCartServiceImpl implements FoodCartService {
 		if (opt.isEmpty())
 			throw new CustomerException("Customer not found!");
 		
-		Optional<Item> itemOpt = itemRepo.findById(itemDTO.getItemId());
+		Optional<Item> itemOpt = itemRepo.findById(itemId);
 		if (itemOpt.isEmpty())
 			throw new ItemException("Item not found!");
 		
@@ -59,7 +59,7 @@ public class FoodCartServiceImpl implements FoodCartService {
 		for(int i=0;i<itemList.size();i++)
 		{
 			Item element=itemList.get(i);
-			if(element.getItemId()==itemDTO.getItemId())
+			if(element.getItemId()==itemId)
 			{
 				element.setQuantity(element.getQuantity()+1);
 				flag=false;
