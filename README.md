@@ -24,7 +24,7 @@
 5. Bill Module
 6. Item Module
 7. Cart Module
-8. Error Module
+8. Exception Module
 
 ### Used Techs & Tools:
 <!-- language -->
