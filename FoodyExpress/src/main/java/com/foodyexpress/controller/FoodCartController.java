@@ -31,9 +31,9 @@ public class FoodCartController {
 
 	@PostMapping("/addtocart/{customerId}")
 	public ResponseEntity<FoodCart> addItemToCartHandler(@RequestParam(required = false) String key,
-			@PathVariable("customerId") Integer customerId, @RequestBody ItemDTO itemDTO)
+			@PathVariable("customerId") Integer customerId, @RequestParam(required = false) Integer itemId)
 			throws ItemException, CustomerException, LoginException {
-		FoodCart foodCart = foodCartService.addItemToCart(key, customerId, itemDTO);
+		FoodCart foodCart = foodCartService.addItemToCart(key, customerId, itemId);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 

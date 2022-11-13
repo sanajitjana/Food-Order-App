@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.foodyexpress.exception.CategoryException;
 import com.foodyexpress.exception.ItemException;
 import com.foodyexpress.exception.LoginException;
-import com.foodyexpress.model.Category;
 import com.foodyexpress.model.CategoryDTO;
 import com.foodyexpress.model.Item;
 import com.foodyexpress.model.ItemDTO;

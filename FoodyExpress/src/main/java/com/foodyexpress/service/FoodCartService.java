@@ -10,7 +10,7 @@ import com.foodyexpress.model.ItemDTO;
 
 public interface FoodCartService {
 	
-	public FoodCart addItemToCart(String key, Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException, LoginException;
+	public FoodCart addItemToCart(String key, Integer customerId, Integer itemId) throws ItemException, CustomerException, LoginException;
 	
 	public FoodCart increaseItemQuantity(String key, Integer cartId, Integer quantity, Integer itemId) throws FoodCartException, ItemException, LoginException;
 

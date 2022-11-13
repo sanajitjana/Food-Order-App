@@ -30,10 +30,10 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer itemId;
 	
-	@NotNull(message = "Name is rqquire")
+	@NotNull(message = "Name is require")
 	private String itemName;
 	
-	@NotNull(message = "Category is rqquire")
+	@NotNull(message = "Category is require")
 	@ManyToOne
 	private Category category;
 
