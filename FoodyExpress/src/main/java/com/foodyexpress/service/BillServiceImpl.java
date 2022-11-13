@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 import com.foodyexpress.exception.BillException;
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.exception.ItemException;
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.exception.OrderDetailsException;
 import com.foodyexpress.model.Bill;
+import com.foodyexpress.model.CurrentUserSession;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.FoodCart;
 import com.foodyexpress.model.Item;
 import com.foodyexpress.model.OrderDetails;
 import com.foodyexpress.repository.BillRepo;
+import com.foodyexpress.repository.CurrentUserSessionRepo;
 import com.foodyexpress.repository.CustomerRepo;
 import com.foodyexpress.repository.FoodCartRepo;
 import com.foodyexpress.repository.OrderDetailsRepo;
@@ -27,32 +30,42 @@ public class BillServiceImpl implements BillService {
 
 	@Autowired
 	private BillRepo billRepo;
-	
+
 	@Autowired
 	private OrderDetailsRepo orderDetailRepo;
 
 	@Autowired
 	private CustomerRepo cusDAO;
-	
+
 	@Autowired
 	private FoodCartRepo foodCartRepo;
 
+	@Autowired
+	private CurrentUserSessionRepo currSession;
+
 	@Override
-	public Bill generateBill(Integer customerId,Integer orderDetailId) throws CustomerException, OrderDetailsException {
+	public Bill generateBill(String key, Integer customerId, Integer orderDetailId)
+			throws CustomerException, OrderDetailsException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
+
 		Optional<OrderDetails> opt = orderDetailRepo.findById(orderDetailId);
-		if (opt.isEmpty()) throw new OrderDetailsException("order details not found ...");
-		Optional<Customer> customerOpt=cusDAO.findById(customerId);
-		if(customerOpt.isEmpty())throw new CustomerException("customer does not exist");
-		Bill bill=new Bill();
-		OrderDetails orderDetails=opt.get();
-		FoodCart foodCart=orderDetails.getFoodCart();
-		Double totalCost =  0D;
-		Integer totalItems=0;
-		for(int i=0;i<foodCart.getItemList().size();i++)
-		{
-			Item items=foodCart.getItemList().get(i);
-			totalCost=totalCost+(items.getQuantity()*items.getCost());
-			totalItems=totalItems+items.getQuantity();
+		if (opt.isEmpty())
+			throw new OrderDetailsException("order details not found ...");
+		Optional<Customer> customerOpt = cusDAO.findById(customerId);
+		if (customerOpt.isEmpty())
+			throw new CustomerException("customer does not exist");
+		Bill bill = new Bill();
+		OrderDetails orderDetails = opt.get();
+		FoodCart foodCart = orderDetails.getFoodCart();
+		Double totalCost = 0D;
+		Integer totalItems = 0;
+		for (int i = 0; i < foodCart.getItemList().size(); i++) {
+			Item items = foodCart.getItemList().get(i);
+			totalCost = totalCost + (items.getQuantity() * items.getCost());
+			totalItems = totalItems + items.getQuantity();
 		}
 		bill.setTotalCost(totalCost);
 		bill.setTotalItem(totalItems);
@@ -62,16 +75,18 @@ public class BillServiceImpl implements BillService {
 		orderDetails.setOrderStatus("completed");
 		foodCart.getItemList().clear();
 //		foodCartRepo.save(foodCart);
-		
-		
-		
+
 		return bill;
-		
-		
+
 	}
 
 	@Override
-	public Bill updateBill(Bill bill) throws BillException {
+	public Bill updateBill(String key, Bill bill) throws BillException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
+
 		Optional<Bill> opt = billRepo.findById(bill.getBillId());
 		if (opt.isPresent()) {
 			return billRepo.save(bill);
@@ -81,7 +96,12 @@ public class BillServiceImpl implements BillService {
 	}
 
 	@Override
-	public Bill removeBill(Integer billId) throws BillException {
+	public Bill removeBill(String key, Integer billId) throws BillException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
+
 		Optional<Bill> opt = billRepo.findById(billId);
 		if (opt.isPresent()) {
 			Bill bill = opt.get();
@@ -94,7 +114,12 @@ public class BillServiceImpl implements BillService {
 	}
 
 	@Override
-	public Bill viewBill(Integer billId) throws BillException {
+	public Bill viewBill(String key, Integer billId) throws BillException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
+
 		Optional<Bill> opt = billRepo.findById(billId);
 		if (opt.isPresent()) {
 			return opt.get();

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.foodyexpress.exception.BillException;
 import com.foodyexpress.exception.CustomerException;
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.exception.OrderDetailsException;
 import com.foodyexpress.model.Bill;
 import com.foodyexpress.service.BillService;
@@ -27,26 +28,31 @@ public class BillController {
 	BillService billService;
 
 	@PostMapping("/add")
-	public ResponseEntity<Bill> generateBill(@RequestParam Integer customerId,@RequestParam Integer orderId ) throws BillException, CustomerException, OrderDetailsException {
-		Bill myBill = billService.generateBill(customerId, orderId);
+	public ResponseEntity<Bill> generateBill(@RequestParam(required = false) String key,
+			@RequestParam Integer customerId, @RequestParam Integer orderId)
+			throws BillException, CustomerException, OrderDetailsException, LoginException {
+		Bill myBill = billService.generateBill(key, customerId, orderId);
 		return new ResponseEntity<Bill>(myBill, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Bill> updateBill(@RequestBody Bill bill) throws BillException {
-		Bill myBill = billService.updateBill(bill);
+	public ResponseEntity<Bill> updateBill(@RequestParam(required = false) String key, @RequestBody Bill bill)
+			throws BillException, LoginException {
+		Bill myBill = billService.updateBill(key, bill);
 		return new ResponseEntity<Bill>(myBill, HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/remove/{billId}")
-	public ResponseEntity<Bill> removeBill(@PathVariable("billId") Integer billId) throws BillException {
-		Bill removedBill = billService.removeBill(billId);
+	public ResponseEntity<Bill> removeBill(@RequestParam(required = false) String key,
+			@PathVariable("billId") Integer billId) throws BillException, LoginException {
+		Bill removedBill = billService.removeBill(key, billId);
 		return new ResponseEntity<Bill>(removedBill, HttpStatus.OK);
 	}
 
 	@GetMapping("/view/{billId}")
-	public ResponseEntity<Bill> viewBill(@PathVariable("billId") Integer billId) throws BillException {
-		Bill bill = billService.viewBill(billId);
+	public ResponseEntity<Bill> viewBill(@RequestParam(required = false) String key,
+			@PathVariable("billId") Integer billId) throws BillException, LoginException {
+		Bill bill = billService.viewBill(key, billId);
 		return new ResponseEntity<Bill>(bill, HttpStatus.ACCEPTED);
 	}
 
