@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.foodyexpress.exception.CustomerException;
+import com.foodyexpress.exception.LoginException;
+import com.foodyexpress.model.CurrentUserSession;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.FoodCart;
+import com.foodyexpress.repository.CurrentUserSessionRepo;
 import com.foodyexpress.repository.CustomerRepo;
 import com.foodyexpress.repository.FoodCartRepo;
 
@@ -20,6 +23,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private FoodCartRepo foodCartRepo;
+
+	@Autowired
+	private CurrentUserSessionRepo currSession;
 
 	@Override
 	public Customer addCustomer(Customer customer) throws CustomerException {
@@ -40,7 +46,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer updateCustomer(Customer c) throws CustomerException {
+	public Customer updateCustomer(String key, Customer c) throws CustomerException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		if (c == null) {
 			throw new CustomerException("Null value is not allowed");
@@ -56,7 +66,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer removeCustomerById(Integer customerId) throws CustomerException {
+	public Customer removeCustomerById(String key, Integer customerId) throws CustomerException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<Customer> optional = customerRepo.findById(customerId);
 
@@ -70,7 +84,12 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer removeCustomer(Customer c) throws CustomerException {
+	public Customer removeCustomer(String key, Customer c) throws CustomerException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
+
 		if (c == null) {
 			throw new CustomerException("Null value is not allowed");
 		}
@@ -87,7 +106,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer viewCustomer(Integer cid) throws CustomerException {
+	public Customer viewCustomer(String key, Integer cid) throws CustomerException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<Customer> optional = customerRepo.findById(cid);
 
@@ -99,7 +122,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Customer> viewAllCustomers() throws CustomerException {
+	public List<Customer> viewAllCustomers(String key) throws CustomerException, LoginException {
+
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		List<Customer> customers = customerRepo.findAll();
 

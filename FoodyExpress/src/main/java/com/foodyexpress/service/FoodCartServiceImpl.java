@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.exception.FoodCartException;
 import com.foodyexpress.exception.ItemException;
+import com.foodyexpress.exception.LoginException;
+import com.foodyexpress.model.CurrentUserSession;
 import com.foodyexpress.model.Customer;
 import com.foodyexpress.model.CustomerDTO;
 import com.foodyexpress.model.FoodCart;
 import com.foodyexpress.model.Item;
 import com.foodyexpress.model.ItemDTO;
+import com.foodyexpress.repository.CurrentUserSessionRepo;
 import com.foodyexpress.repository.CustomerRepo;
 import com.foodyexpress.repository.FoodCartRepo;
 import com.foodyexpress.repository.ItemRepo;
@@ -30,25 +33,15 @@ public class FoodCartServiceImpl implements FoodCartService {
 	@Autowired
 	private ItemRepo itemRepo;
 
-//	@Override
-//	public FoodCart addItemToCart(Integer cartId, Item item) throws FoodCartException {
-//		// TODO Auto-generated method stub
-//
-//		Optional<FoodCart> opt = foodcartRepo.findById(cartId);
-//
-//		if (opt.isPresent()) {
-//			FoodCart foodCart = opt.get();
-//			foodCart.getItemList().add(item);
-//			foodcartRepo.save(foodCart);
-//			return foodCart;
-//
-//		} else {
-//			throw new FoodCartException("Food Cart not found!");
-//		}
-//	}
+	@Autowired
+	private CurrentUserSessionRepo currSession;
 
 	@Override
-	public FoodCart addItemToCart(Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException {
+	public FoodCart addItemToCart(String key, Integer customerId, ItemDTO itemDTO) throws ItemException, CustomerException, LoginException {
+		
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 		
 		Optional<Customer> opt = customerRepo.findById(customerId);
 		if (opt.isEmpty())
@@ -83,9 +76,13 @@ public class FoodCartServiceImpl implements FoodCartService {
 	}
 
 	@Override
-	public FoodCart increaseItemQuantity(Integer cartId, Integer quantity, Integer itemId)
-			throws FoodCartException, ItemException {
+	public FoodCart increaseItemQuantity(String key, Integer cartId, Integer quantity, Integer itemId)
+			throws FoodCartException, ItemException, LoginException {
 		// TODO Auto-generated method stub
+		
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<FoodCart> opt = foodcartRepo.findById(cartId);
 
@@ -118,9 +115,13 @@ public class FoodCartServiceImpl implements FoodCartService {
 	}
 
 	@Override
-	public FoodCart decreaseItemQuantity(Integer cartId, Integer quantity, Integer itemId)
-			throws FoodCartException, ItemException {
+	public FoodCart decreaseItemQuantity(String key, Integer cartId, Integer quantity, Integer itemId)
+			throws FoodCartException, ItemException, LoginException {
 		// TODO Auto-generated method stub
+		
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<FoodCart> opt = foodcartRepo.findById(cartId);
 
@@ -158,8 +159,12 @@ public class FoodCartServiceImpl implements FoodCartService {
 	}
 
 	@Override
-	public FoodCart removeItem(Integer cartId, Integer itemId) throws FoodCartException, ItemException {
+	public FoodCart removeItem(String key, Integer cartId, Integer itemId) throws FoodCartException, ItemException, LoginException {
 		// TODO Auto-generated method stub
+		
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<FoodCart> opt = foodcartRepo.findById(cartId);
 
@@ -192,8 +197,12 @@ public class FoodCartServiceImpl implements FoodCartService {
 	}
 
 	@Override
-	public FoodCart removeCart(Integer cartId) throws FoodCartException {
+	public FoodCart removeCart(String key, Integer cartId) throws FoodCartException, LoginException {
 		// TODO Auto-generated method stub
+		
+		CurrentUserSession currSess = currSession.findByPrivateKey(key);
+		if (currSess == null)
+			throw new LoginException("Login required");
 
 		Optional<FoodCart> opt = foodcartRepo.findById(cartId);
 

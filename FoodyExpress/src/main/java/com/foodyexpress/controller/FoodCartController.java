@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.foodyexpress.exception.CustomerException;
 import com.foodyexpress.exception.FoodCartException;
 import com.foodyexpress.exception.ItemException;
-
+import com.foodyexpress.exception.LoginException;
 import com.foodyexpress.model.CustomerDTO;
 import com.foodyexpress.model.FoodCart;
 
@@ -30,39 +30,41 @@ public class FoodCartController {
 	private FoodCartService foodCartService;
 
 	@PostMapping("/addtocart/{customerId}")
-	public ResponseEntity<FoodCart> addItemToCartHandler(@PathVariable("customerId") Integer customerId,
-			@RequestBody ItemDTO itemDTO) throws ItemException, CustomerException {
-		FoodCart foodCart = foodCartService.addItemToCart(customerId, itemDTO);
+	public ResponseEntity<FoodCart> addItemToCartHandler(@RequestParam(required = false) String key,
+			@PathVariable("customerId") Integer customerId, @RequestBody ItemDTO itemDTO)
+			throws ItemException, CustomerException, LoginException {
+		FoodCart foodCart = foodCartService.addItemToCart(key, customerId, itemDTO);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 
 	@PutMapping("/increaseQuantity")
-	public ResponseEntity<FoodCart> increaseItemQuantityHandler(@RequestParam Integer cartId,
-			@RequestParam Integer quantity, @RequestParam Integer itemId)
-			throws ItemException, CustomerException, FoodCartException {
-		FoodCart foodCart = foodCartService.increaseItemQuantity(cartId, quantity, itemId);
+	public ResponseEntity<FoodCart> increaseItemQuantityHandler(@RequestParam(required = false) String key,
+			@RequestParam Integer cartId, @RequestParam Integer quantity, @RequestParam Integer itemId)
+			throws ItemException, CustomerException, FoodCartException, LoginException {
+		FoodCart foodCart = foodCartService.increaseItemQuantity(key, cartId, quantity, itemId);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 
 	@PutMapping("/decreaseQuantity")
-	public ResponseEntity<FoodCart> decreaseItemQuantityHandler(@RequestParam Integer cartId,
-			@RequestParam Integer quantity, @RequestParam Integer itemId)
-			throws ItemException, CustomerException, FoodCartException {
-		FoodCart foodCart = foodCartService.decreaseItemQuantity(cartId, quantity, itemId);
+	public ResponseEntity<FoodCart> decreaseItemQuantityHandler(@RequestParam(required = false) String key,
+			@RequestParam Integer cartId, @RequestParam Integer quantity, @RequestParam Integer itemId)
+			throws ItemException, CustomerException, FoodCartException, LoginException {
+		FoodCart foodCart = foodCartService.decreaseItemQuantity(key, cartId, quantity, itemId);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/item")
-	public ResponseEntity<FoodCart> removeItemHandler(@RequestParam Integer cartId, @RequestParam Integer itemId)
-			throws ItemException, CustomerException, FoodCartException {
-		FoodCart foodCart = foodCartService.removeItem(cartId, itemId);
+	public ResponseEntity<FoodCart> removeItemHandler(@RequestParam(required = false) String key,
+			@RequestParam Integer cartId, @RequestParam Integer itemId)
+			throws ItemException, CustomerException, FoodCartException, LoginException {
+		FoodCart foodCart = foodCartService.removeItem(key, cartId, itemId);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<FoodCart> clearCartHandler(@RequestParam Integer cartId)
-			throws ItemException, CustomerException, FoodCartException {
-		FoodCart foodCart = foodCartService.removeCart(cartId);
+	public ResponseEntity<FoodCart> clearCartHandler(@RequestParam(required = false) String key,
+			@RequestParam Integer cartId) throws ItemException, CustomerException, FoodCartException, LoginException {
+		FoodCart foodCart = foodCartService.removeCart(key, cartId);
 		return new ResponseEntity<FoodCart>(foodCart, HttpStatus.OK);
 	}
 

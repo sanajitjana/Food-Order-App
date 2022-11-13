@@ -36,33 +36,37 @@ public class CustomerController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) throws CustomerException {
-		Customer returnCustomer = customerService.updateCustomer(customer);
+	public ResponseEntity<Customer> updateCustomer(@RequestParam(required = false) String key,
+			@RequestBody Customer customer) throws CustomerException, LoginException {
+		Customer returnCustomer = customerService.updateCustomer(key, customer);
 		return new ResponseEntity<Customer>(returnCustomer, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Customer> deleteCustomerById(@PathVariable("id") Integer customerId)
-			throws CustomerException {
-		Customer customer = customerService.removeCustomerById(customerId);
+	public ResponseEntity<Customer> deleteCustomerById(@RequestParam(required = false) String key,
+			@PathVariable("id") Integer customerId) throws CustomerException, LoginException {
+		Customer customer = customerService.removeCustomerById(key, customerId);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete")
-	public ResponseEntity<Customer> deleteCustomer(@RequestBody Customer c) throws CustomerException {
-		Customer customer = customerService.removeCustomer(c);
-		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+	public ResponseEntity<Customer> deleteCustomer(@RequestParam(required = false) String key,
+			@RequestBody Customer customer) throws CustomerException, LoginException {
+		Customer resCustomer = customerService.removeCustomer(key, customer);
+		return new ResponseEntity<Customer>(resCustomer, HttpStatus.OK);
 	}
 
 	@GetMapping("/all/{id}")
-	public ResponseEntity<Customer> viewCutomer(@PathVariable("id") Integer id) throws CustomerException {
-		Customer customer = customerService.viewCustomer(id);
+	public ResponseEntity<Customer> viewCutomer(@RequestParam(required = false) String key,
+			@PathVariable("id") Integer id) throws CustomerException, LoginException {
+		Customer customer = customerService.viewCustomer(key, id);
 		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Customer>> viewAllCustomers() throws CustomerException {
-		List<Customer> customers = customerService.viewAllCustomers();
+	public ResponseEntity<List<Customer>> viewAllCustomers(@RequestParam(required = false) String key)
+			throws CustomerException, LoginException {
+		List<Customer> customers = customerService.viewAllCustomers(key);
 		return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
 	}
 }
