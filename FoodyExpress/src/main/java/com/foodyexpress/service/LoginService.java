@@ -6,8 +6,8 @@ import com.foodyexpress.model.*;
 
 public interface LoginService {
 
-	public String loginAccount(Login dto) throws LoginException;
+	public String loginAccount(LoginDTO loginDTO) throws LoginException;
 
-	public String logoutAccount(String key) throws LoginException;
+	public String logoutAccount(String role, String key) throws LoginException;
 
 }

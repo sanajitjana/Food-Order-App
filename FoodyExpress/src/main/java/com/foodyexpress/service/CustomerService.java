@@ -7,15 +7,15 @@ import com.foodyexpress.model.Customer;
 
 public interface CustomerService {
 
-	Customer addCustomer(Customer c) throws CustomerException;
+	Customer addCustomer(Customer customer) throws CustomerException;
 
-	Customer updateCustomer(Customer c) throws CustomerException;	
-	
+	Customer updateCustomer(Customer customer) throws CustomerException;
+
 	Customer removeCustomerById(Integer customerId) throws CustomerException;
 
-	Customer removeCustomer(Customer c) throws CustomerException;
+	Customer removeCustomer(Customer customer) throws CustomerException;
 
-	Customer viewCustomer(Integer cid) throws CustomerException;
+	Customer viewCustomer(Integer customerId) throws CustomerException;
 
 	List<Customer> viewAllCustomers() throws CustomerException;
 
