@@ -47,6 +47,8 @@
 
 ```
 
+# ER Diagram
+![eR DIAGRAM](https://user-images.githubusercontent.com/83025741/201511888-a4dadcc5-4e09-4602-85e3-12fb5f69fb5d.PNG)
 
 # Contributors
 
