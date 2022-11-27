@@ -23,7 +23,7 @@
 
 ## Modules
 1. Login Module
-2. Custumer Module
+2. Customer Module
 3. Restaurant Module
 4. Order Module
 5. Bill Module
